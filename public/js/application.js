@@ -8,35 +8,39 @@ function initMap() {
     // Send ajax request to DB to create a bathroom object.
     var longitude = event.latLng.lng();
     var latitude = event.latLng.lat();
-    findAddress(longitude, latitude);
-    placeMarkerAndPanTo(event.latLng, map);
+    placeMarker(latitude, longitude, map);
   });
 }
 
 function showInfoWindow(){
+  console.log(this)
   this.info.open(map, this);
-  console.log(this);
 }
 
-function placeMarkerAndPanTo(latLng, map) {
+function placeMarker(latitude, longitude, map) {
   var marker = new google.maps.Marker({
-    position: latLng,
+    position: {lat: latitude, lng: longitude},
     map: map
   });
-  marker.addListener('click', showInfoWindow)
-  map.panTo(latLng);
+  $.when(findAddress(longitude, latitude, marker)).then(function(){
+    marker.info = new google.maps.InfoWindow({content: marker.address + '<br>' + 'head with no name'})
+    marker.addListener('click', showInfoWindow)
+  })
+
 }
 
-function findAddress(longitude, latitude){
-  $.ajax({
+function findAddress(longitude, latitude, marker){
+  var request = $.ajax({
     url: '/address',
     data: {latitude: latitude, longitude: longitude}
   })
   .done(function(response) {
     var addressObject = JSON.parse(response);
-    var formattedAddress = addressObject.results[0].formatted_address;
+    formattedAddress = addressObject.results[0].formatted_address;
     createBathroom({latitude: latitude, longitude: longitude, address: formattedAddress});
+    marker.address = formattedAddress
   });
+  return request
 }
 
 function createBathroom(args){
@@ -58,7 +62,7 @@ function getMarkers(){
         position: {lat: toilet.latitude, lng: toilet.longitude},
         map: map
       });
-      marker.info = new google.maps.InfoWindow({content: 'woohoo'})
+      marker.info = new google.maps.InfoWindow({content: toilet.address + '<br>' + toilet.name})
       marker.addListener('click', showInfoWindow)
     });
   });
