@@ -9,7 +9,11 @@ end
 # "https://maps.googleapis.com/maps/api/js?key=<%=ENV["GOOGLE_MAPS_KEY"]%>&libraries=geometry,places&callback=initMap"
 
 post '/bathroom' do
-  params[:name] = 'name'
-  p params
-  # head = Bathroom.create!(params[])
+  # params[:name] = 'name'
+  head = Bathroom.create!(params)
+end
+
+get '/bathrooms/data' do
+  bathrooms = Bathroom.all
+  bathrooms.to_json
 end
