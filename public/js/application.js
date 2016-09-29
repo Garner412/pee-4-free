@@ -13,11 +13,17 @@ function initMap() {
   });
 }
 
+function showInfoWindow(){
+  this.info.open(map, this);
+  console.log(this);
+}
+
 function placeMarkerAndPanTo(latLng, map) {
   var marker = new google.maps.Marker({
     position: latLng,
     map: map
   });
+  marker.addListener('click', showInfoWindow)
   map.panTo(latLng);
 }
 
@@ -27,7 +33,6 @@ function findAddress(longitude, latitude){
     data: {latitude: latitude, longitude: longitude}
   })
   .done(function(response) {
-    console.log(response);
     var addressObject = JSON.parse(response);
     var formattedAddress = addressObject.results[0].formatted_address;
     createBathroom({latitude: latitude, longitude: longitude, address: formattedAddress});
@@ -39,33 +44,22 @@ function createBathroom(args){
     url: '/bathroom',
     method: 'POST',
     data: args
-  })
-  .done(function(response) {
-    console.log(response);
   });
 }
-
-// function placeMarkers(latLngHash){
-//   var marker = new google.maps.Marker({
-//     position: latLngHash,
-//     map: map
-//   });
-// }
-
-
 
 function getMarkers(){
   $.ajax({
     url: '/bathrooms/data'
   })
   .done(function(response){
-    console.log(response);
     var toilets = JSON.parse(response);
     toilets.forEach(function(toilet){
       var marker = new google.maps.Marker({
         position: {lat: toilet.latitude, lng: toilet.longitude},
         map: map
       });
+      marker.info = new google.maps.InfoWindow({content: 'woohoo'})
+      marker.addListener('click', showInfoWindow)
     });
   });
 }
@@ -73,11 +67,5 @@ function getMarkers(){
 $(document).ready(function() {
   getMarkers();
   $('button').on('click', function(){
-    getMarkers();
-    // var marker = new google.maps.Marker({
-    //   position: {lat: 41.888500, lng: -87.636073},
-    //   map: map,
-    //   title: 'DBC'
-    // });
   });
 });
