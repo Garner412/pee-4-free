@@ -1,0 +1,15 @@
+html, body {
+  height: 100%;
+  margin: auto;
+  width: 90%;
+  padding: 0;
+}
+#map {
+  height: 50%;
+  width: 50%;
+  margin-left: 50%;
+}
+
+button{
+  float: left;
+}
