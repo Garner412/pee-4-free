@@ -12,6 +12,7 @@ gem 'activerecord', '~>4.2.0'
 
 gem 'rake'
 gem 'dotenv'
+gem 'httparty'
 
 gem 'shotgun', '~>0.9.1'
 
