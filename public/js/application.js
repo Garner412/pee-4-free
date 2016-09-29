@@ -1,15 +1,10 @@
 var map;
 function initMap() {
  map = new google.maps.Map(document.getElementById('map'), {
-  center: {lat: 41.881, lng: -87.623},
-  zoom: 10
-});
- map.addListener('click', function(event){
-    // Send ajax request to DB to create a bathroom object.
-    var longitude = event.latLng.lng();
-    var latitude = event.latLng.lat();
-    placeMarker(latitude, longitude, map);
+    center: {lat: 41.881, lng: -87.623},
+    zoom: 10
   });
+
 }
 
 function showInfoWindow(){
@@ -23,7 +18,7 @@ function placeMarker(latitude, longitude, map) {
     map: map
   });
   $.when(findAddress(longitude, latitude, marker)).then(function(){
-    marker.info = new google.maps.InfoWindow({content: marker.address + '<br>' + 'head with no name'})
+    marker.info = new google.maps.InfoWindow({content: marker.address + '<br>' + marker.name})
     marker.addListener('click', showInfoWindow)
   })
 
@@ -70,6 +65,12 @@ function getMarkers(){
 
 $(document).ready(function() {
   getMarkers();
-  $('button').on('click', function(){
+  $('.bathroom-button').on('click', function(){
+     map.addListener('click', function(event){
+    // Send ajax request to DB to create a bathroom object.
+    var longitude = event.latLng.lng();
+    var latitude = event.latLng.lat();
+    placeMarker(latitude, longitude, map);
+  });
   });
 });
