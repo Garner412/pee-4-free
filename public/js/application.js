@@ -1,6 +1,6 @@
 var map;
 var markers = [];
-var toiletIcon = 'http://i.imgur.com/TvzHo1r.png'
+var toiletIcon = 'http://i.imgur.com/8HQL2BK.png'
 function initAutocomplete() {
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
