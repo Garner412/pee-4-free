@@ -1,5 +1,6 @@
 var map;
 var markers = [];
+var toiletIcon = 'http://i.imgur.com/TvzHo1r.png'
 function initAutocomplete() {
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
@@ -26,7 +27,7 @@ function initAutocomplete() {
   if (!place.geometry) {
     console.log("Returned place contains no geometry");
     return;
-  } 
+  }
             // Create a marker for each place.
   markers.push(new google.maps.Marker({
     map: map,
@@ -77,7 +78,8 @@ function buildInfoWindow(marker){
 function placeMarker(latitude, longitude, map) {
   var marker = new google.maps.Marker({
     position: {lat: latitude, lng: longitude},
-    map: map
+    map: map,
+    icon: toiletIcon
   });
   $.when(findAddress(longitude, latitude, marker)).then(function(){
     marker.addListener('click', showInfoWindow);
@@ -151,7 +153,7 @@ function getMarkers(){
       var marker = new google.maps.Marker({
         position: {lat: toilet.latitude, lng: toilet.longitude},
         map: map,
-        icon: 'http://i.imgur.com/TvzHo1r.png'
+        icon: toiletIcon
       });
       marker.address = toilet.address
       marker.rank = toilet.rank
@@ -171,5 +173,8 @@ $(document).ready(function() {
     var latitude = event.latLng.lat();
     placeMarker(latitude, longitude, map);
   });
+  });
+  $('.whatever').on('click', function() {
+    alert("Being homeless, I've traversed the city. I am the free bathroom guru.")
   });
 });
