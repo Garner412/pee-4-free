@@ -1,6 +1,6 @@
 var map;
 var markers = [];
-var toiletIcon = 'http://i.imgur.com/8HQL2BK.png'
+var toiletIcon = 'https://i.imgur.com/8HQL2BK.png'
 function initAutocomplete() {
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
@@ -21,14 +21,14 @@ function initAutocomplete() {
     if (places.length == 0) {
       return;
     }
-          // For each place, get the icon, name and location.
+  // For each place, get the icon, name and location.
   var bounds = new google.maps.LatLngBounds();
   places.forEach(function(place) {
   if (!place.geometry) {
     console.log("Returned place contains no geometry");
     return;
   }
-            // Create a marker for each place.
+  // Create a marker for each place.
   markers.push(new google.maps.Marker({
     map: map,
     title: place.name,
@@ -36,7 +36,7 @@ function initAutocomplete() {
   }));
 
   if (place.geometry.viewport) {
-    // Only geocodes have viewport.
+  // Only geocodes have viewport.
     bounds.union(place.geometry.viewport);
   } else {
     bounds.extend(place.geometry.location);
@@ -45,6 +45,7 @@ function initAutocomplete() {
     map.fitBounds(bounds);
   });
 }
+
 function initMap() {
  map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 41.881, lng: -87.623},
@@ -67,6 +68,9 @@ function initMap() {
 
 
 function showInfoWindow(){
+  markers.forEach(function(marker){
+     marker.info.close(map, marker);
+  })
   this.info.open(map, this);
 }
 
@@ -176,6 +180,5 @@ $(document).ready(function() {
   });
   $('.whatever').on('click', function() {
     $('h2').append("<h2>Being homeless, I've traversed the city. I am the free bathroom guru.</h2>")
-    // alert("Being homeless, I've traversed the city. I am the free bathroom guru.")
   });
 });
