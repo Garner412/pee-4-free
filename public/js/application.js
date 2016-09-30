@@ -3,7 +3,7 @@ var markers = [];
 function initMap() {
  map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 41.881, lng: -87.623},
-    zoom: 10
+    zoom: 5
   });
 
  if (navigator.geolocation) {
