@@ -175,6 +175,7 @@ $(document).ready(function() {
   });
   });
   $('.whatever').on('click', function() {
-    alert("Being homeless, I've traversed the city. I am the free bathroom guru.")
+    $('h2').append("<h2>Being homeless, I've traversed the city. I am the free bathroom guru.</h2>")
+    // alert("Being homeless, I've traversed the city. I am the free bathroom guru.")
   });
 });
