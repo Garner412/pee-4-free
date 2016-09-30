@@ -1,4 +1,5 @@
 var map;
+var markers = [];
 function initMap() {
  map = new google.maps.Map(document.getElementById('map'), {
     center: {lat: 41.881, lng: -87.623},
@@ -8,8 +9,12 @@ function initMap() {
 }
 
 function showInfoWindow(){
-  console.log(this)
   this.info.open(map, this);
+}
+
+function buildInfoWindow(marker){
+  marker.info = new google.maps.InfoWindow({content: marker.address + '<br><strong>Name: </strong>' + marker.name + '<br><strong>Rank: </strong>'+ marker.ranking})
+  marker.addListener('click', showInfoWindow)
 }
 
 function placeMarker(latitude, longitude, map) {
@@ -17,27 +22,41 @@ function placeMarker(latitude, longitude, map) {
     position: {lat: latitude, lng: longitude},
     map: map
   });
-    marker.info = new google.maps.InfoWindow({content: "<table>" + "<input type='hidden' name=id, value="+marker.id+">"+
-                 "<tr><td>Name:</td> <td><input type='text' id='name'/> </td> </tr>" +
-                 "<tr><td>Ranking:</td> <td><select id='ranking'>" +
-                 "<option value=5 SELECTED>5</option>" +
-                 "<option value=4>4</option>" +
-                 "<option value=3>3</option>" +
-                 "<option value=2>2</option>" +
-                 "<option value=1>1</option>" +
-                 "</select> </td></tr>" +
-                 "<tr><td></td><td><input type='button' value='Save & Close' onclick='saveData(marker)'/></td></tr>"})
-
   $.when(findAddress(longitude, latitude, marker)).then(function(){
     marker.addListener('click', showInfoWindow);
-  })
-    marker.info.open(map, marker);
 
+  var html = "<table class='name-toilet'>" + "<input type='hidden' id='address' name=address value='"+ marker.address +"'>"+
+             "<tr><td>Name:</td> <td><input type='text' id='name'/> </td> </tr>" +
+             "<tr><td>Ranking:</td> <td><select id='ranking'>" +
+             "<option value=5 SELECTED>5</option>" +
+             "<option value=4>4</option>" +
+             "<option value=3>3</option>" +
+             "<option value=2>2</option>" +
+             "<option value=1>1</option>" +
+             "</select> </td></tr>" +
+             "<tr><td></td><td><input type='button' value='Save & Close' onclick='saveData()'/></td></tr>"
+
+    marker.info = new google.maps.InfoWindow({content: html})
+    marker.info.open(map, marker);
+    })
+  markers.push(marker);
 }
-function saveData(id){
-  console.log(id)
-  // marker.name = document.getElementById("name").value;
-  // marker.ranking = document.getElementById("ranking").value;
+
+function saveData(){
+  var address = document.getElementById("address").value
+  var name = document.getElementById("name").value;
+  var ranking = document.getElementById("ranking").value
+
+  $.ajax({
+    url: '/bathrooms',
+    method: 'put',
+    data: {address: address, name: name, ranking: ranking}
+  }).done(function(response){
+    var marker = markers.find(function(marker){
+      return marker.address === address
+    })
+    marker.info.close(map, marker);
+  })
 }
 
 function findAddress(longitude, latitude, marker){
@@ -73,8 +92,11 @@ function getMarkers(){
         position: {lat: toilet.latitude, lng: toilet.longitude},
         map: map
       });
-      marker.info = new google.maps.InfoWindow({content: toilet.address + '<br>' + toilet.name})
+      marker.address = toilet.address
+      marker.rank = toilet.rank
+      marker.info = new google.maps.InfoWindow({content: toilet.address + '<br><strong>Name: </strong>' + toilet.name + '<br><strong>Rank: </strong>'+ toilet.ranking})
       marker.addListener('click', showInfoWindow)
+      markers.push(marker);
     });
   });
 }

@@ -17,3 +17,10 @@ get '/bathrooms/data' do
   bathrooms = Bathroom.all
   bathrooms.to_json
 end
+
+put '/bathrooms' do
+  bathroom = Bathroom.find_by(address: params[:address])
+  bathroom.update(name: params[:name], ranking: params[:ranking].to_i)
+  bathroom.save
+  bathroom.to_json
+end
