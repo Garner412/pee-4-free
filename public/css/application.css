@@ -12,6 +12,7 @@ html, body {
   display: block;
   height: 90%;
   width: 90%;
+  margin: auto;
   /*float: right;*/
 }
 
@@ -22,6 +23,10 @@ button{
 h1{
   text-align: center;
   font-size: 3em;
+}
+
+h2 {
+  text-align: center;
 }
 .controls {
         margin-top: 10px;
