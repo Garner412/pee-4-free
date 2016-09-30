@@ -1,6 +1,13 @@
 var map;
 var markers = [];
 var toiletIcon = 'https://i.imgur.com/8HQL2BK.png'
+
+function closeAllWindows(){
+  markers.forEach(function(marker){
+   marker.info.close(map, marker);
+  })
+}
+
 function initAutocomplete() {
   // Create the search box and link it to the UI element.
   var input = document.getElementById('pac-input');
@@ -66,11 +73,8 @@ function initMap() {
   initAutocomplete();
 }
 
-
 function showInfoWindow(){
-  markers.forEach(function(marker){
-     marker.info.close(map, marker);
-  })
+  closeAllWindows();
   this.info.open(map, this);
 }
 
@@ -100,6 +104,7 @@ function placeMarker(latitude, longitude, map) {
              "<tr><td></td><td><input type='button' value='Save & Close' onclick='saveData()'/></td></tr>"
 
     marker.info = new google.maps.InfoWindow({content: html})
+    closeAllWindows();
     marker.info.open(map, marker);
     })
   markers.push(marker);
