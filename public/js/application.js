@@ -145,9 +145,13 @@ function getMarkers(){
   .done(function(response){
     var toilets = JSON.parse(response);
     toilets.forEach(function(toilet){
+      var image = {url: 'http://i.imgur.com/sFa2YC1.png',
+      size: new google.maps.Size(25, 30)
+      }
       var marker = new google.maps.Marker({
         position: {lat: toilet.latitude, lng: toilet.longitude},
-        map: map
+        map: map,
+        icon: 'http://i.imgur.com/TvzHo1r.png'
       });
       marker.address = toilet.address
       marker.rank = toilet.rank
